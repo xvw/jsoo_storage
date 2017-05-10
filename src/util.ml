@@ -26,6 +26,8 @@
 exception Not_supported
 exception Not_found
 
+(** Map a function on an option *)
 let option_map f = function
   | None -> None 
   | Some x -> Some (f x)
+

@@ -20,3 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *)
+
+module Local = AbstractStorage.Make(
+  struct 
+    include AbstractStorage.StringKV
+    let storage = Dom_html.window##.localStorage
+  end
+)
+
+module Session = AbstractStorage.Make(
+  struct 
+    include AbstractStorage.StringKV
+    let storage = Dom_html.window##.sessionStorage
+  end
+)
