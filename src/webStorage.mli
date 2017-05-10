@@ -64,6 +64,10 @@ sig
   (** [iter (fun key value -> ... )] apply f on each row of the Storage *)
   val iter: (key -> value -> unit) -> unit
 
+  (** [find p] returns the first element of the storage that
+      satisfies the predicate [p]. *)
+  val find: (key -> value -> bool) -> (key * value) option
+
 end
 
 
@@ -106,5 +110,9 @@ sig
 
   (** [iter (fun key value -> ... )] apply f on each row of the Storage *)
   val iter: (key -> value -> unit) -> unit
+
+  (** [find p] returns the first element of the storage that
+      satisfies the predicate [p]. *)
+  val find: (key -> value -> bool) -> (key * value) option
 
 end

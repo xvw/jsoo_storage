@@ -58,11 +58,12 @@ sig
   val remove: key -> unit 
   val clear: unit -> unit
   val key: int -> key option
+  val at: int -> (key * value) option
   val length: unit -> int
   val to_hashtbl: unit -> (key, value) Hashtbl.t
   val iter: (key -> value -> unit) -> unit
-  (*val find: (key -> value -> bool) -> value option
-  val select: (key -> value -> bool) -> (key, value) Hashtbl.t*)
+  val find: (key -> value -> bool) -> (key * value) option
+  (*val select: (key -> value -> bool) -> (key, value) Hashtbl.t*)
 end
 
 module Make (S : STORAGE_HANDLER) : STORAGE with 
@@ -101,16 +102,18 @@ struct
     |> Js.Opt.to_option
     |> Util.option_map to_key
 
-  let raw_get key = match get key with
-    | Some r -> r
-    | _ -> raise Util.Not_found
+  let at i = 
+    match key i with 
+    | None -> None 
+    | Some k -> 
+      Util.option_map (fun e -> (k, e)) (get k)
 
   let iter f = 
     let len = length () in 
     for i = 0 to (pred len) do 
-      match key i with 
+      match at i with 
       | None -> raise Util.Not_found
-      | Some k -> (f k (raw_get k))
+      | Some (k, v) -> f k v
     done
 
   let to_hashtbl () = 
@@ -118,6 +121,19 @@ struct
     let hash = Hashtbl.create len in 
     let () = iter (Hashtbl.add hash) in 
     hash
+
+  let find f = 
+    let len = length () in 
+    let rec loop i = 
+      if i = len then None 
+      else begin 
+        match at i with 
+        | None -> raise Util.Not_found
+        | Some (k, v) -> 
+          if f k v then Some (k, v)
+          else loop (succ i)
+      end
+    in loop 0
 
   
 end
