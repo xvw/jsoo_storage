@@ -131,16 +131,3 @@ struct
     hash
 
 end
-
-
-module StringKV : KEY_STORAGE 
-  with type key = string and type value = string = 
-struct 
-  type key  = string
-  type value = string
-  let of_key = Js.string 
-  let of_value = Js.string 
-  let to_key = Js.to_string 
-  let to_value = Js.to_string
-end
-

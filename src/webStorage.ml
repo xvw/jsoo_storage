@@ -21,16 +21,28 @@
  * SOFTWARE.
  *)
 
+module StringKV : AbstractStorage.KEY_STORAGE 
+  with type key = string and type value = string = 
+struct 
+  type key  = string
+  type value = string
+  let of_key = Js.string 
+  let of_value = Js.string 
+  let to_key = Js.to_string 
+  let to_value = Js.to_string
+end
+
+
 module Local = AbstractStorage.Make(
   struct 
-    include AbstractStorage.StringKV
+    include StringKV
     let storage = Dom_html.window##.localStorage
   end
 )
 
 module Session = AbstractStorage.Make(
   struct 
-    include AbstractStorage.StringKV
+    include StringKV
     let storage = Dom_html.window##.sessionStorage
   end
 )
