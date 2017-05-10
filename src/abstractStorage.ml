@@ -32,23 +32,12 @@ sig
   val to_value: Js.js_string Js.t -> value
 end
 
-module StringKV : KEY_STORAGE with 
-  type key = string 
-  and type value = string = 
-struct 
-  type key  = string
-  type value = string
-  let of_key = Js.string 
-  let of_value = Js.string 
-  let to_key = Js.to_string 
-  let to_value = Js.to_string
-end
-
 module type STORAGE_HANDLER = 
 sig 
   include KEY_STORAGE
   val storage: Dom_html.storage Js.t Js.optdef
 end
+
 
 module type STORAGE = 
 sig 
@@ -65,6 +54,7 @@ sig
   val find: (key -> value -> bool) -> (key * value) option
   val select: (key -> value -> bool) -> (key, value) Hashtbl.t
 end
+
 
 module Make (S : STORAGE_HANDLER) : STORAGE with 
   type key = S.key 
@@ -140,6 +130,17 @@ struct
     iter (fun k v -> if f k v then Hashtbl.add hash k v); 
     hash
 
-  
+end
+
+
+module StringKV : KEY_STORAGE 
+  with type key = string and type value = string = 
+struct 
+  type key  = string
+  type value = string
+  let of_key = Js.string 
+  let of_value = Js.string 
+  let to_key = Js.to_string 
+  let to_value = Js.to_string
 end
 
