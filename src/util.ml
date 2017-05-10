@@ -21,3 +21,11 @@
  * SOFTWARE.
  *)
 
+
+(** Exception raised if the Storage is not allowed *)
+exception Not_supported
+exception Not_found
+
+let option_map f = function
+  | None -> None 
+  | Some x -> Some (f x)
