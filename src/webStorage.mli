@@ -61,6 +61,9 @@ sig
   (** Returns all of a Storage as an [Hashtbl.t] *)
   val to_hashtbl: unit -> (key, value) Hashtbl.t
 
+  (** [iter (fun key value -> ... )] apply f on each row of the Storage *)
+  val iter: (key -> value -> unit) -> unit
+
 end
 
 
@@ -100,5 +103,8 @@ sig
 
   (** Returns all of a Storage as an [Hashtbl.t] *)
   val to_hashtbl: unit -> (key, value) Hashtbl.t
+
+  (** [iter (fun key value -> ... )] apply f on each row of the Storage *)
+  val iter: (key -> value -> unit) -> unit
 
 end
