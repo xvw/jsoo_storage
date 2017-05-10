@@ -68,6 +68,10 @@ sig
       satisfies the predicate [p]. *)
   val find: (key -> value -> bool) -> (key * value) option
 
+  (** [select p] returns all the elements of storage
+      that satisfy the predicate [p] in an [Hashtbl.t]. *)
+  val select: (key -> value -> bool) -> (key, value) Hashtbl.t
+
 end
 
 
@@ -114,5 +118,9 @@ sig
   (** [find p] returns the first element of the storage that
       satisfies the predicate [p]. *)
   val find: (key -> value -> bool) -> (key * value) option
+
+  (** [select p] returns all the elements of storage
+      that satisfy the predicate [p] in an [Hashtbl.t]. *)
+  val select: (key -> value -> bool) -> (key, value) Hashtbl.t
 
 end

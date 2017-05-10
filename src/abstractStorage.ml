@@ -63,7 +63,7 @@ sig
   val to_hashtbl: unit -> (key, value) Hashtbl.t
   val iter: (key -> value -> unit) -> unit
   val find: (key -> value -> bool) -> (key * value) option
-  (*val select: (key -> value -> bool) -> (key, value) Hashtbl.t*)
+  val select: (key -> value -> bool) -> (key, value) Hashtbl.t
 end
 
 module Make (S : STORAGE_HANDLER) : STORAGE with 
@@ -134,6 +134,11 @@ struct
           else loop (succ i)
       end
     in loop 0
+
+  let select f = 
+    let hash = Hashtbl.create 16 in 
+    iter (fun k v -> if f k v then Hashtbl.add hash k v); 
+    hash
 
   
 end
