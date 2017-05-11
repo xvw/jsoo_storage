@@ -21,6 +21,7 @@
  * SOFTWARE.
  *)
 
+
 module StringKV : AbstractStorage.KEY_STORAGE 
   with type key = string and type value = string = 
 struct 
@@ -46,3 +47,7 @@ module Session = AbstractStorage.Make(
     let storage = Dom_html.window##.sessionStorage
   end
 )
+
+
+
+

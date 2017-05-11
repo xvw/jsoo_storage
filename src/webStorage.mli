@@ -28,14 +28,15 @@
 module Local : 
 sig 
 
-  (** The type of a Key *)
-  type key = string
+ (** Returns the JavaScript object of the handler *)
+  val handler: Dom_html.storage Js.t
 
-  (** The type of a Value *) 
+  type key = string
   type value = string
 
-   (** When passed a key name, will return that key's value. *)
+
   val get: key -> value option
+  (** When passed a key name, will return that key's value. *)
 
   (** When passed a key name and value, will add that key to 
       the storage, or update that key's value if it already exists. 
@@ -52,6 +53,9 @@ sig
       nth key in the storage. 
   *)
   val key: int -> key option
+
+  (** Get the couple Key/Values with a numeric index *)
+  val at: int -> (key * value) option
 
   (** Returns an integer representing the number of data items stored 
       in the Storage object. 
@@ -71,22 +75,22 @@ sig
   (** [select p] returns all the elements of storage
       that satisfy the predicate [p] in an [Hashtbl.t]. *)
   val select: (key -> value -> bool) -> (key, value) Hashtbl.t
-
 end
 
 
 (** Wrapper for the SessionStorage *)
-module Session: 
+module Session : 
 sig 
+    
+ (** Returns the JavaScript object of the handler *)
+  val handler: Dom_html.storage Js.t
 
-    (** The type of a Key *)
   type key = string
-
-  (** The type of a Value *) 
   type value = string
 
-   (** When passed a key name, will return that key's value. *)
+
   val get: key -> value option
+  (** When passed a key name, will return that key's value. *)
 
   (** When passed a key name and value, will add that key to 
       the storage, or update that key's value if it already exists. 
@@ -103,6 +107,8 @@ sig
       nth key in the storage. 
   *)
   val key: int -> key option
+
+  val at: int -> (key * value) option
 
   (** Returns an integer representing the number of data items stored 
       in the Storage object. 
@@ -122,5 +128,4 @@ sig
   (** [select p] returns all the elements of storage
       that satisfy the predicate [p] in an [Hashtbl.t]. *)
   val select: (key -> value -> bool) -> (key, value) Hashtbl.t
-
 end

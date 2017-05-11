@@ -41,6 +41,7 @@ end
 
 module type STORAGE = 
 sig 
+  val handler: Dom_html.storage Js.t
   include KEY_STORAGE
   val get: key -> value option
   val set: key -> value -> unit
@@ -61,13 +62,13 @@ module Make (S : STORAGE_HANDLER) : STORAGE with
   and type value = S.value = 
 struct
 
-  include S
-
   let handler = 
     Js.Optdef.case
-      storage
+      S.storage
       (fun () -> raise Util.Not_supported)
       (fun x -> x)
+
+  include S
 
   let length () = 
     handler##.length
