@@ -47,29 +47,3 @@ module Session = AbstractStorage.Make(
     let storage = Dom_html.window##.sessionStorage
   end
 )
-
-module type TABLE_DEFINITION = 
-sig 
-  type key 
-  type value 
-  val name: string 
-  val dump_key: key -> string 
-  val dump_value: value -> string
-  val load_key: string -> key 
-  val load_value: string -> value 
-  val storage : Dom_html.storage Js.t
-end
-
-module type TABLE = AbstractStorage.STORAGE
-
-module Make (T : TABLE_DEFINITION) : TABLE_DEFINITION = 
-struct 
-
-  include T
-
-end
-
-
-
-
-
