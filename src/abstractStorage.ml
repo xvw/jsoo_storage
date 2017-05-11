@@ -41,8 +41,9 @@ end
 
 module type STORAGE = 
 sig 
+  type key 
+  type value
   val handler: Dom_html.storage Js.t
-  include KEY_STORAGE
   val get: key -> value option
   val set: key -> value -> unit
   val remove: key -> unit 

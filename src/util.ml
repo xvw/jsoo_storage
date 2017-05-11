@@ -31,7 +31,7 @@ let option_map f = function
   | None -> None 
   | Some x -> Some (f x)
 
-let prefix_table = "internal_jsoo_storage_"
+let prefix_table = "__internal_jsoo_storage/"
 let table_name name =  prefix_table ^ name
-let key_name table key = table_name table ^ "_" ^ key
+let key_name table key = table_name table ^ "/" ^ key
 
