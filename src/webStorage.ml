@@ -62,9 +62,10 @@ end
 
 module type TABLE = AbstractStorage.STORAGE
 
-module Make (T : TABLE_DEFINITION) = 
+module Make (T : TABLE_DEFINITION) : TABLE_DEFINITION = 
 struct 
 
+  include T
 
 end
 

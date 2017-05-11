@@ -212,3 +212,4 @@ sig
 
 end
 
+module Make : functor (T : TABLE_DEFINITION) -> TABLE_DEFINITION
