@@ -22,6 +22,18 @@
  *)
 
 
+type t = Dom_html.storage Js.t
+
+
+type event = Dom_html.storageEvent Js.t
+let event = Dom.Event.make "storage"
+
+let lwt_js_event ?use_capture target = 
+  Lwt_js_events.make_event 
+    event
+    ?use_capture 
+    target
+
 module StringKV : AbstractStorage.KEY_STORAGE 
   with type key = string and type value = string = 
 struct 

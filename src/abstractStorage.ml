@@ -69,6 +69,17 @@ struct
       (fun () -> raise Util.Not_supported)
       (fun x -> x)
 
+  let callback f default  = 
+    (
+      fun ev -> 
+        match Js.Opt.to_option (ev##.storageArea) with
+        | None -> default
+        | Some h -> 
+          if h = handler 
+          then f ev 
+          else default
+    )
+
   include S
 
   let length () = 

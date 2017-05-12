@@ -23,13 +23,31 @@
 
 (** WebStorage is a wrapper around the DOMStorage API. *)
 
+(** Shortcut for [Dom_html.storage Js.t] *)
+type t = Dom_html.storage Js.t
+
+(** {1 Events} *)
+
+(** Shortcut for events *)
+type event = Dom_html.storageEvent Js.t
+
+(** An event to be used with [addEventListener] *)
+val event:  event Dom.Event.typ
+
+(** An event to be used with [Lwt_js_events] *)
+val lwt_js_event: 
+  ?use_capture:bool 
+  -> Dom_html.window Js.t
+  -> event Lwt.t
+
+(** {1 Modules} *)
 
 (** Wrapper for the LocalStorage *)
 module Local : 
 sig 
 
  (** Returns the JavaScript object of the handler *)
-  val handler: Dom_html.storage Js.t
+  val handler: t
 
   type key = string
   type value = string
@@ -83,7 +101,7 @@ module Session :
 sig 
     
  (** Returns the JavaScript object of the handler *)
-  val handler: Dom_html.storage Js.t
+  val handler: t
 
   type key = string
   type value = string
