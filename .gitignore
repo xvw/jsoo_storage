@@ -39,5 +39,5 @@ api.docdir
 *.js
 *config.ml
 experiences/*
-*.js
-*.map
+examples/*.js
+examples/*.map

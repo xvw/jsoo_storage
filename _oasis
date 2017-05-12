@@ -1,4 +1,4 @@
-Name: jsoo_staorage
+Name: jsoo_storage
 Version: 1.0
 Synopsis: A Js_of_OCaml wrapper of the WebStorage API
 Description: Another approach to webstorage in Js_of_OCaml

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Example of WebStorage</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <header>
+      <h1>WebStorage</h1>
+    </header>
+
+    <nav>
+      <h2>Create entry</h2>
+      <form>
+        <label for="prefix"><strong>Prefix</strong></label>
+        <input id="prefix" type="text" placeholder="Prefix value">
+        <label for="key"><strong>Key</strong></label>
+        <input id="key" type="text" placeholder="Key value">
+        <label for="value"><strong>Value</strong></label>
+        <input id="value" type="text" placeholder="Value">
+        <div>
+          <strong>Save in</strong><br />
+          <button id="in_session">Session</button>
+          <button id="in_local">Local</button>
+        </div>
+      </form>
+    </nav>
+
+    <main id="content">
+      <div>
+        <section>
+          <h2>Session</h2>
+          <div>
+            <Table class="data-table">
+              <thead>
+              <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>A</td>
+                  <td>
+                    <input type="text" value="B">
+                  </td>
+                  <td>
+                    <button class="update">update</button>
+                    <button class="delete">delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>C</td>
+                  <td>
+                    <input type="text" value="B">
+                  </td>
+                  <td>
+                    <button class="update">update</button>
+                    <button class="delete">delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Ejqskjdk</td>
+                  <td>
+                    <input type="text" value="B">
+                  </td>
+                  <td>
+                    <button class="update">update</button>
+                    <button class="delete">delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button class="empty">Clear bucket</button>
+
+        </section>
+        <section>
+          <h2>Local</h2>
+          <div>
+            
+          </div>
+
+          <button class="empty">Clear bucket</button>
+
+        </section>
+      </div>
+
+      <hr class="clear">
+      <footer>
+        test
+      </footer>
+
+    </main>
+
+    <script type="application/javascript" src="storage.js"></script>
+  </body>
+</html>
