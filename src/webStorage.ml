@@ -25,8 +25,9 @@
 type t = Dom_html.storage Js.t
 
 
-type event = Dom_html.storageEvent Js.t
-let event = Dom.Event.make "storage"
+type event = Util.event
+
+let event = Util.event
 
 let lwt_js_event ?use_capture target = 
   Lwt_js_events.make_event 
@@ -43,6 +44,37 @@ struct
   let of_value = Js.string 
   let to_key = Js.to_string 
   let to_value = Js.to_string
+end
+
+
+
+module type STORAGE =
+sig 
+  
+  type key = string
+  type value = string
+
+  type storageEvent = {
+    key: key
+  ; old_value: value option
+  ; new_value: value option
+  ; url: string
+  }
+
+  val handler: t
+  val length: unit -> int
+  val get: key -> value option
+  val set: key -> value -> unit
+  val remove: key -> unit 
+  val clear: unit -> unit
+  val key: int -> key option
+  val at: int -> (key * value) option
+  val to_hashtbl: unit -> (key, value) Hashtbl.t
+  val iter: (key -> value -> unit) -> unit
+  val find: (key -> value -> bool) -> (key * value) option
+  val select: (key -> value -> bool) -> (key, value) Hashtbl.t
+  val onchange: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+  
 end
 
 

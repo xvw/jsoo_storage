@@ -41,20 +41,30 @@ end
 
 module type STORAGE = 
 sig 
+
   type key 
   type value
+
+  type storageEvent = {
+    key: key
+  ; old_value: value option
+  ; new_value: value option
+  ; url: string
+  }
+
   val handler: Dom_html.storage Js.t
+  val length: unit -> int
   val get: key -> value option
   val set: key -> value -> unit
   val remove: key -> unit 
   val clear: unit -> unit
   val key: int -> key option
   val at: int -> (key * value) option
-  val length: unit -> int
   val to_hashtbl: unit -> (key, value) Hashtbl.t
   val iter: (key -> value -> unit) -> unit
   val find: (key -> value -> bool) -> (key * value) option
   val select: (key -> value -> bool) -> (key, value) Hashtbl.t
+  val onchange: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
 end
 
 
@@ -63,24 +73,20 @@ module Make (S : STORAGE_HANDLER) : STORAGE with
   and type value = S.value = 
 struct
 
-  let handler = 
-    Js.Optdef.case
-      S.storage
-      (fun () -> raise Util.Not_supported)
-      (fun x -> x)
-
-  let callback f default  = 
-    (
-      fun ev -> 
-        match Js.Opt.to_option (ev##.storageArea) with
-        | None -> default
-        | Some h -> 
-          if h = handler 
-          then f ev 
-          else default
-    )
-
   include S
+
+  type storageEvent = {
+    key: key
+  ; old_value: value option
+  ; new_value: value option
+  ; url: string
+  }
+
+  let handler = 
+  Js.Optdef.case
+    storage
+    (fun () -> raise Util.Not_supported)
+    (fun x -> x)
 
   let length () = 
     handler##.length
@@ -142,5 +148,30 @@ struct
     let hash = Hashtbl.create 16 in 
     iter (fun k v -> if f k v then Hashtbl.add hash k v); 
     hash
+
+  let is_valid_storage e = (Js.Opt.return handler) = (e##.storageArea)
+  let begin_by prefix str = (str##lastIndexOf_from prefix 0) = 0
+  let opt_str value = 
+    value 
+    |> Js.Opt.to_option
+    |> Util.option_map to_value
+
+  let onchange ?(prefix="") f =
+    let func (e : Util.event) = 
+      if is_valid_storage e 
+      then begin 
+        let key = e##.key in 
+        if begin_by (Js.string prefix) key then 
+          f {
+            key = to_key key 
+          ; old_value = opt_str (e##.oldValue)
+          ; new_value = opt_str (e##.keynewValue)
+          ; url = Js.to_string e##.url}
+      end; Js._true
+    in Dom.addEventListener
+      Dom_html.window 
+      Util.event
+      (Dom.handler func)
+      Js._true
 
 end
