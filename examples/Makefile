@@ -1,5 +1,5 @@
 OCAML    = ocamlfind ocamlc -g -package js_of_ocaml -package js_of_ocaml.ppx
-DEP      = -package jsoo_storage
+DEP      = -package lwt.ppx -package jsoo_storage
 JSOCAML  = js_of_ocaml --pretty --sourcemap +weak.js +toplevel.js
 
 .PHONY: storage.ml

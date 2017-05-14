@@ -8,6 +8,29 @@ struct
 
   exception Failure
 
+  let puts x = Firebug.console##log(x)
+
+  let iter_children f node =
+    let nodeL = node##.childNodes in
+    let len = nodeL##.length in
+    for i = 0 to (pred len) do
+      Js.Opt.iter (nodeL ## item(i)) f
+    done
+
+  let remove_children fnode =
+    let rec iter node =
+      match Js.Opt.to_option (node##.firstChild) with
+      | None -> ()
+      | Some child ->
+        let _ = node ## removeChild(child) in iter node
+  in iter fnode
+
+  let watch_once event args f =
+    let%lwt result = event args in
+    let _ = f result in
+    Lwt.return ()
+
+
   let fail () = raise Failure
   let unopt x = Js.Opt.get x fail
 
@@ -36,6 +59,19 @@ struct
     let _ = handler k v in
     List.map empty_input [prefix; key; value]
 
+  let create_cells handler tbody = ()
+
+
+  let onload handler tbody = 
+    watch_once 
+      Lwt_js_events.onload 
+      () 
+      (fun _ -> 
+        let _ = remove_children tbody in 
+        create_cells handler tbody
+      )
+
+
 end
 
 
@@ -48,6 +84,11 @@ let save handler form _ _ =
 let session_btn = Util.qs Dom_html.document "#in_session"
 let local_btn = Util.qs Dom_html.document "#in_local"
 let form = Util.qs Dom_html.document "#creator"
+let stbody = Util.qs Dom_html.document "#session-body"
+let ltbody = Util.qs Dom_html.document "#local-body"
+
+let _ = Util.onload WebStorage.Session.to_hashtbl stbody
+let _ = Util.onload WebStorage.Local.to_hashtbl ltbody
 
 let _ = Lwt_js_events.(
   async_loop
