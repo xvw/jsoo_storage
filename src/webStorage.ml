@@ -24,6 +24,7 @@
 
 type t = Dom_html.storage Js.t
 
+class type storageEvent = Util.storageEvent
 
 type event = Util.event
 
@@ -55,7 +56,7 @@ sig
   type value = string
 
   type storageEvent = {
-    key: key
+    key: key option
   ; old_value: value option
   ; new_value: value option
   ; url: string

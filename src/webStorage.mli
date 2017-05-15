@@ -34,8 +34,21 @@ type t = Dom_html.storage Js.t
 
 (** {1 Events} *)
 
+(** Patch of StorageEvent *)
+class type storageEvent = 
+object 
+  inherit Dom_html.event
+  method key : Js.js_string Js.t Js.opt Js.readonly_prop
+  method oldValue : Js.js_string Js.t Js.opt Js.readonly_prop
+  method keynewValue : Js.js_string Js.t Js.opt Js.readonly_prop
+  method url : Js.js_string Js.t Js.readonly_prop
+  method storageArea : Dom_html.storage Js.t Js.opt Js.readonly_prop
+end
+
+
+
 (** Shortcut for events *)
-type event = Dom_html.storageEvent Js.t
+type event = storageEvent Js.t
 
 (** An event to be used with [addEventListener] *)
 val event:  event Dom.Event.typ
@@ -56,7 +69,7 @@ sig
 
   (** Event received where an update is performing on the storage *)
   type storageEvent = {
-    key: key
+    key: key option
   ; old_value: value option
   ; new_value: value option
   ; url: string

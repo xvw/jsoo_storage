@@ -46,7 +46,7 @@ sig
   type value
 
   type storageEvent = {
-    key: key
+    key: key option
   ; old_value: value option
   ; new_value: value option
   ; url: string
@@ -68,6 +68,7 @@ sig
   val oninsert: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
   val onremove: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
   val onupdate: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+  val onclear: (unit -> unit) -> Dom.event_listener_id
 end
 
 
@@ -79,7 +80,7 @@ struct
   include S
 
   type storageEvent = {
-    key: key
+    key: key option
   ; old_value: value option
   ; new_value: value option
   ; url: string
@@ -164,13 +165,22 @@ struct
       let _ = Firebug.console##log(e) in 
       if is_valid_storage e 
       then begin 
-        let key = e##.key in 
-        if begin_by (Js.string prefix) key then 
+        let k = Js.Opt.to_option e##.key in
+        match k with 
+        | Some key -> 
+          if begin_by (Js.string prefix) key then 
+            f {
+              key = Util.option_map to_key k
+            ; old_value = opt_str (e##.oldValue)
+            ; new_value = opt_str (e##.keynewValue)
+            ; url = Js.to_string e##.url}
+        | None -> 
           f {
-            key = to_key key 
-          ; old_value = opt_str (e##.oldValue)
-          ; new_value = opt_str (e##.keynewValue)
-          ; url = Js.to_string e##.url}
+            key = None
+          ; old_value = None
+          ; new_value = None
+          ; url = Js.to_string e##.url
+          }
       end; Js._true
     in
     Dom.addEventListener
@@ -203,6 +213,14 @@ struct
         (fun ev -> 
           match (ev.old_value, ev.new_value) with 
           | (Some _, Some _) -> f ev 
+          | _ -> ()
+        )
+
+      let onclear f =
+      onchange 
+        (fun ev -> 
+          match (ev.old_value, ev.new_value, ev.key) with 
+          | (None, None, None) -> f ()
           | _ -> ()
         )
 
