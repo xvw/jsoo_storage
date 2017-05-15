@@ -125,13 +125,13 @@ sig
   val onchange: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
 
   (** Watch if a new value is inserted *)
-  val oninsert: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+  val oninsert: ?prefix:string -> (key -> value -> unit) -> Dom.event_listener_id
 
   (** Watch if a value is removed *)
-  val onremove: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+  val onremove: ?prefix:string -> (key -> unit) -> Dom.event_listener_id
 
   (** Watch if a value is updated *)
-  val onupdate: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+  val onupdate: ?prefix:string -> (key -> value -> unit) -> Dom.event_listener_id
 
   (** Watch if the storage is clear *)
   val onclear: (unit -> unit) -> Dom.event_listener_id

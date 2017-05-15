@@ -75,9 +75,9 @@ sig
   val find: (key -> value -> bool) -> (key * value) option
   val select: (key -> value -> bool) -> (key, value) Hashtbl.t
   val onchange: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
-  val oninsert: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
-  val onremove: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
-  val onupdate: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id 
+  val oninsert: ?prefix:string -> (key -> value -> unit) -> Dom.event_listener_id
+  val onremove: ?prefix:string -> (key -> unit) -> Dom.event_listener_id
+  val onupdate: ?prefix:string -> (key -> value -> unit) -> Dom.event_listener_id
   val onclear: (unit -> unit) -> Dom.event_listener_id
 end
 

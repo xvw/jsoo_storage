@@ -65,9 +65,9 @@ sig
   val find: (key -> value -> bool) -> (key * value) option
   val select: (key -> value -> bool) -> (key, value) Hashtbl.t
   val onchange: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
-  val oninsert: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
-  val onremove: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
-  val onupdate: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+  val oninsert: ?prefix:string -> (key -> value -> unit) -> Dom.event_listener_id
+  val onremove: ?prefix:string -> (key -> unit) -> Dom.event_listener_id
+  val onupdate: ?prefix:string -> (key -> value -> unit) -> Dom.event_listener_id
   val onclear: (unit -> unit) -> Dom.event_listener_id
 end
 
@@ -162,7 +162,6 @@ struct
 
   let onchange ?(prefix="") f =
     let func (e : Util.event) = 
-      let _ = Firebug.console##log(e) in 
       if is_valid_storage e 
       then begin 
         let k = Js.Opt.to_option e##.key in
@@ -193,8 +192,8 @@ struct
       onchange 
         ~prefix 
         (fun ev -> 
-          match (ev.old_value, ev.new_value) with 
-          | (None, Some _) -> f ev 
+          match (ev.old_value, ev.new_value, ev.key) with 
+          | (None, Some v, Some k) -> f k v 
           | _ -> ()
         )
 
@@ -202,8 +201,8 @@ struct
       onchange 
         ~prefix 
         (fun ev -> 
-          match (ev.old_value, ev.new_value) with 
-          | (Some _, None) -> f ev 
+          match (ev.old_value, ev.new_value, ev.key) with 
+          | (Some _, None, Some k) -> f k
           | _ -> ()
         )
 
@@ -211,8 +210,8 @@ struct
       onchange 
         ~prefix 
         (fun ev -> 
-          match (ev.old_value, ev.new_value) with 
-          | (Some _, Some _) -> f ev 
+          match (ev.old_value, ev.new_value, ev.key) with 
+          | (Some _, Some v, Some k) -> f k v
           | _ -> ()
         )
 
