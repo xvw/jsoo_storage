@@ -97,28 +97,37 @@ sig
   *)
   val length: unit -> int
 
-  (** when passed a key name, will return that key's value.  (Wrapped into an option) *)
+  (** When passed a key name, will return that key's value.  (Wrapped into an option) *)
   val get: key -> value option
 
-  (**  when passed a key name and value, will add that key to the storage, 
+  (**  When passed a key name and value, will add that key to the storage, 
        or update that key's value if it already exists.)
   *)
   val set: key -> value -> unit
 
-  (** when passed a key name, will remove that key from the storage. *)
+  (** When passed a key name, will remove that key from the storage. *)
   val remove: key -> unit 
 
-  (**  when invoked, clears all stored keys. *)
+  (**  When invoked, clears all stored keys. *)
   val clear: unit -> unit
 
-  (** when passed a number n, returns the name of the nth key in the storage. 
+  (** When passed a number n, returns the name of the nth key in the storage. 
       The order of keys is [user-agent] defined, so you should not rely on it. *)
   val key: int -> key option
 
+  (** Returns the couple Key/Value at a specific position  *)
   val at: int -> (key * value) option
+
+  (** Produce an [Hashtbl.t] from a Storage *)
   val to_hashtbl: unit -> (key, value) Hashtbl.t
+
+  (** applies function f on each key/value of a storage *)
   val iter: (key -> value -> unit) -> unit
+
+
   val find: (key -> value -> bool) -> (key * value) option
+
+
   val select: (key -> value -> bool) -> (key, value) Hashtbl.t
 
   val on_change : 
@@ -128,5 +137,11 @@ sig
 
 end
 
-module Local : STORAGE 
+
+(** {2 Concrete implementation} *)
+
+(** Support for [LocalStorage] *)
+module Local : STORAGE
+
+(** Support for [SessionStorage] *) 
 module Session : STORAGE
