@@ -28,9 +28,11 @@
     @see <https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API>
     The reference on Mozilla Developer Network
 *)
-(*
-(** Shortcut for [Dom_html.storage Js.t] *)
-type t = Dom_html.storage Js.t
+
+(** {1 Exceptions} *)
+exception Not_supported
+exception Not_found
+
 
 (** {1 Events} *)
 
@@ -45,7 +47,15 @@ object
   method storageArea : Dom_html.storage Js.t Js.opt Js.readonly_prop
 end
 
+type event = storageEvent Js.t
+val event : event Dom.Event.typ
 
+(** {1 Types} *)
+
+(** Shortcut for [Dom_html.storage Js.t] *)
+type t = Dom_html.storage Js.t
+
+(*
 
 (** Shortcut for events *)
 type event = storageEvent Js.t
