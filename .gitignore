@@ -40,4 +40,4 @@ api.docdir
 *config.ml
 experiences/*
 examples/*.js
-examples/*.map
+example/*.map
