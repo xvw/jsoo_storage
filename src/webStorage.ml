@@ -78,6 +78,7 @@ sig
   val oninsert: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
   val onremove: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
   val onupdate: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id 
+  val onclear: (unit -> unit) -> Dom.event_listener_id
 end
 
 

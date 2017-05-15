@@ -5,9 +5,9 @@ JSOCAML  = js_of_ocaml --pretty --sourcemap +weak.js +toplevel.js
 .PHONY: storage.ml
 
 # Specific rule
-all: storage.js eventStorage.js clean serve
+all: storage.js eventStorage.js clean
 
-serve:
+serve: storage.js eventStorage.js clean
 	python -m SimpleHTTPServer 8000
 
 # Generic rules

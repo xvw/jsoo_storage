@@ -144,35 +144,25 @@ let save handler form _ _ =
   Lwt.return_unit
 
 
+let clear t (module S : WebStorage.STORAGE) _ _ =
+  let _ = S.clear () in 
+  let _ = Util.remove_children t in 
+  let _ = alert "Storage is empty !" in 
+  Lwt.return_unit
+
 
 let session_btn = Util.qs doc "#in_session"
 let local_btn = Util.qs doc "#in_local"
 let form = Util.qs doc "#creator"
 let stbody = Util.qs doc "#session-body"
 let ltbody = Util.qs doc "#local-body"
-
-let btn_up = Util.qs doc ".update"
+let clears = Util.qs doc "#clear-session"
+let clearl = Util.qs doc "#clear-local"
 
 let _ = Util.onload (module WebStorage.Session) stbody
 let _ = Util.onload (module WebStorage.Local) ltbody
 
-let _ = Lwt_js_events.(
-  async_loop
-    click
-    session_btn
-    (save WebStorage.Session.set form)
-)
-let _ = Lwt_js_events.(
-  async_loop
-    click
-    local_btn
-    (save WebStorage.Local.set form)
-)
-
-let _ = 
-  Lwt_js_events.(
-    async_loop
-      WebStorage.lwt_js_event
-      Dom_html.window
-      (fun _ _ -> puts "test"; Lwt.return_unit)
-  )
+let _ = Lwt_js_events.(async_loop click session_btn (save WebStorage.Session.set form))
+let _ = Lwt_js_events.(async_loop click local_btn (save WebStorage.Local.set form))
+let _ = Lwt_js_events.(async_loop click clears (clear stbody (module WebStorage.Session)))
+let _ = Lwt_js_events.(async_loop click clearl (clear ltbody (module WebStorage.Local)))

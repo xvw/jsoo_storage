@@ -101,8 +101,6 @@ main > div:nth-child(1) > section {
 }
 
 main > div:nth-child(1) > section > div {
-  overflow: auto;
-  max-height: 400px;
   padding: 8px;
 }
 

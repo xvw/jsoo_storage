@@ -133,6 +133,9 @@ sig
   (** Watch if a value is updated *)
   val onupdate: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
 
+  (** Watch if the storage is clear *)
+  val onclear: (unit -> unit) -> Dom.event_listener_id
+
 end
 
 
