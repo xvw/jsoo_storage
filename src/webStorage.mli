@@ -28,7 +28,7 @@
     @see <https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API>
     The reference on Mozilla Developer Network
 *)
-
+(*
 (** Shortcut for [Dom_html.storage Js.t] *)
 type t = Dom_html.storage Js.t
 
@@ -147,3 +147,4 @@ module Local : STORAGE
 
 (** Wrapper for the SessionStorage *)
 module Session : STORAGE
+*)

@@ -1,3 +1,0 @@
-REC
-S .
-PKG js_of_ocaml js_of_ocaml.ppx lwt.ppx jsoo_storage
