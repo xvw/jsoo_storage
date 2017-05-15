@@ -84,6 +84,10 @@ sig
     | Update of key * old_value * value
 
 
+  (** Dump a changestate (mainly for debugging) *)
+  val dump_change_state : change_state -> string
+
+
   (** [is_supported ()] returns [true] if the current storage is 
       supported by the browser, false otherwise.
    *)

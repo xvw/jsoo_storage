@@ -58,7 +58,7 @@ sig
     | Remove of key * old_value 
     | Update of key * old_value * value
 
-
+  val dump_change_state : change_state -> string
   val is_supported: unit -> bool
   val handler: t
   val length: unit -> int
@@ -93,6 +93,12 @@ struct
     | Insert of key * value 
     | Remove of key * old_value 
     | Update of key * old_value * value 
+
+  let dump_change_state = function 
+    | Clear -> "Clear"
+    | Insert (k, v) -> Printf.sprintf "Insert (%s, new_value: %s)" k v
+    | Remove (k, v) -> Printf.sprintf "Remove (%s, old_value: %s)" k v
+    | Update (k, v, c) -> Printf.sprintf "Update (%s, %s --> %s)" k v c
 
   let is_supported () = 
     match Js.Optdef.to_option R.handler with 
