@@ -3,12 +3,14 @@
 
 (** Some unsafe functions to help me *)
 
+let doc = Dom_html.document
+let puts x = Firebug.console##log(x)
+let alert x = Dom_html.window##alert(Js.string x)
+
 module Util =
 struct 
 
   exception Failure
-
-  let puts x = Firebug.console##log(x)
 
   let iter_children f node =
     let nodeL = node##.childNodes in
@@ -59,16 +61,77 @@ struct
     let _ = handler k v in
     List.map empty_input [prefix; key; value]
 
-  let create_cells handler tbody = ()
+  let td tr text = 
+    let t = Dom_html.createTd doc in
+    let txt = doc##createTextNode(Js.string text) in 
+    let _ = Dom.appendChild t txt in 
+    Dom.appendChild tr t
 
 
-  let onload handler tbody = 
+  let td_i tr text = 
+    let t = Dom_html.createTd doc in
+    let i = Dom_html.createInput doc in 
+    let _ = i##.value := (Js.string text) in
+    let _ = Dom.appendChild t i in
+    let _ = Dom.appendChild tr t in  
+    i
+
+
+  let btn td text klass key = 
+    let data = Js.string "data-key" in 
+    let b = Dom_html.createButton doc in 
+    let t = doc##createTextNode(Js.string text) in 
+    let _ = b##.classList##add(Js.string klass) in 
+    let _ = b##setAttribute data (Js.string key) in 
+    let _ = Dom.appendChild b t in 
+    let _ = Dom.appendChild  td b in b
+
+
+
+  let create_cells (module S : WebStorage.STORAGE) tbody =
+    let hash = S.to_hashtbl () in 
+    Hashtbl.iter (fun key value -> 
+      let tr = Dom_html.createTr doc in 
+      let _ = td tr key in 
+      let i = td_i tr value in 
+      let action = Dom_html.createTd doc in 
+      let up = btn action "update" "update" key in 
+      let del = btn action "delete" "delete" key in 
+      let _ = Dom.appendChild tr action in
+      let _ = Dom.appendChild tbody tr in 
+      let _ =
+        Lwt_js_events.(
+          async_loop
+            click 
+            up
+            (fun _ _ -> 
+              let v = i##.value in 
+              S.set key (Js.to_string v);
+              alert "Updated !";
+              Lwt.return_unit
+            )
+        ) |> ignore
+        in 
+        Lwt_js_events.(
+          async_loop
+            click 
+            del
+            (fun _ _ -> 
+              S.remove key;
+              Dom.removeChild tbody tr; 
+              alert "Deleted !";
+              Lwt.return_unit )
+        ) |> ignore
+    ) hash
+
+
+  let onload (module S : WebStorage.STORAGE) tbody = 
     watch_once 
       Lwt_js_events.onload 
       () 
       (fun _ -> 
         let _ = remove_children tbody in 
-        create_cells handler tbody
+        create_cells (module S) tbody
       )
 
 
@@ -76,19 +139,22 @@ end
 
 
 let save handler form _ _ = 
+  let _ = alert "Saved !" in
   let _ = Util.insert handler form in
   Lwt.return_unit
 
 
 
-let session_btn = Util.qs Dom_html.document "#in_session"
-let local_btn = Util.qs Dom_html.document "#in_local"
-let form = Util.qs Dom_html.document "#creator"
-let stbody = Util.qs Dom_html.document "#session-body"
-let ltbody = Util.qs Dom_html.document "#local-body"
+let session_btn = Util.qs doc "#in_session"
+let local_btn = Util.qs doc "#in_local"
+let form = Util.qs doc "#creator"
+let stbody = Util.qs doc "#session-body"
+let ltbody = Util.qs doc "#local-body"
 
-let _ = Util.onload WebStorage.Session.to_hashtbl stbody
-let _ = Util.onload WebStorage.Local.to_hashtbl ltbody
+let btn_up = Util.qs doc ".update"
+
+let _ = Util.onload (module WebStorage.Session) stbody
+let _ = Util.onload (module WebStorage.Local) ltbody
 
 let _ = Lwt_js_events.(
   async_loop
@@ -102,6 +168,9 @@ let _ = Lwt_js_events.(
     local_btn
     (save WebStorage.Local.set form)
 )
+
+let _ = puts "lapin"
+let _ = WebStorage.Session.onchange (fun e -> puts "test")
 
     
     

@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+button {
+  cursor: pointer;
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -171,6 +175,10 @@ main > footer {
   padding: 8px;
   border-style: none;
   background-color: red;
+}
+
+.update, .delete {
+  border-radius: 0;
 }
 
 .update {

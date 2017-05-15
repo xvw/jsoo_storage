@@ -158,6 +158,7 @@ struct
 
   let onchange ?(prefix="") f =
     let func (e : Util.event) = 
+      let _ = Firebug.console##log(e) in 
       if is_valid_storage e 
       then begin 
         let key = e##.key in 
