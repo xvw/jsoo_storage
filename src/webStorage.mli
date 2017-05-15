@@ -124,12 +124,20 @@ sig
   (** applies function f on each key/value of a storage *)
   val iter: (key -> value -> unit) -> unit
 
-
+  (** [find p] returns the first element of the storage that satisfies the predicate [p]. 
+      The result is wrapped into an option.
+  *)
   val find: (key -> value -> bool) -> (key * value) option
 
 
+  (** [select p] returns all the elements of the storage that satisfy the predicate [p]. 
+      The results is an [Hashtbl.t] of the results.
+  *)
   val select: (key -> value -> bool) -> (key, value) Hashtbl.t
 
+  (** [on_change f] trigger [f] at each changement of the storage. (You can use a [prefix]
+      to trigger the events only if it concerns a set of keys (with the gived prefix)) 
+  *)
   val on_change : 
     ?prefix:string 
     -> (change_state -> url -> unit) 
