@@ -65,6 +65,9 @@ sig
   val find: (key -> value -> bool) -> (key * value) option
   val select: (key -> value -> bool) -> (key, value) Hashtbl.t
   val onchange: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+  val oninsert: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+  val onremove: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+  val onupdate: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
 end
 
 
@@ -169,10 +172,38 @@ struct
           ; new_value = opt_str (e##.keynewValue)
           ; url = Js.to_string e##.url}
       end; Js._true
-    in Dom.addEventListener
+    in
+    Dom.addEventListener
       Dom_html.window 
       Util.event
       (Dom.handler func)
       Js._true
+
+    let oninsert ?(prefix="") f =
+      onchange 
+        ~prefix 
+        (fun ev -> 
+          match (ev.old_value, ev.new_value) with 
+          | (None, Some _) -> f ev 
+          | _ -> ()
+        )
+
+    let onremove ?(prefix="") f =
+      onchange 
+        ~prefix 
+        (fun ev -> 
+          match (ev.old_value, ev.new_value) with 
+          | (Some _, None) -> f ev 
+          | _ -> ()
+        )
+
+    let onupdate ?(prefix="") f =
+      onchange 
+        ~prefix 
+        (fun ev -> 
+          match (ev.old_value, ev.new_value) with 
+          | (Some _, Some _) -> f ev 
+          | _ -> ()
+        )
 
 end

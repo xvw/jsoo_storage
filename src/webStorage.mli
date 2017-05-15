@@ -111,6 +111,15 @@ sig
   (** Watch the mutation of a storage *)
   val onchange: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
 
+  (** Watch if a new value is inserted *)
+  val oninsert: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+
+  (** Watch if a value is removed *)
+  val onremove: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+
+  (** Watch if a value is updated *)
+  val onupdate: ?prefix:string -> (storageEvent -> unit) -> Dom.event_listener_id
+
 end
 
 

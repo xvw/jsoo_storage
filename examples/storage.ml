@@ -169,9 +169,10 @@ let _ = Lwt_js_events.(
     (save WebStorage.Local.set form)
 )
 
-let _ = puts "lapin"
-let _ = WebStorage.Session.onchange (fun e -> puts "test")
-
-    
-    
-
+let _ = 
+  Lwt_js_events.(
+    async_loop
+      WebStorage.lwt_js_event
+      Dom_html.window
+      (fun _ _ -> puts "test"; Lwt.return_unit)
+  )

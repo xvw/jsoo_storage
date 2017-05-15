@@ -32,5 +32,5 @@ let option_map f = function
   | Some x -> Some (f x)
 
 type event = Dom_html.storageEvent Js.t
-let event : (Dom_html.storageEvent Js.t) Dom.Event.typ = 
+let event : event Dom.Event.typ = 
   Dom.Event.make "storage"
