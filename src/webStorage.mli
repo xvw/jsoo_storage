@@ -29,20 +29,29 @@
     The reference on Mozilla Developer Network
 *)
 
-(** {1 Exceptions} *)
+
+(** Shortcut for [Dom_html.storage Js.t] *)
+type t = Dom_html.storage Js.t
+
+
+(** {2 Exceptions} *)
+
+(** Raised if the Storage is not supported by the browser *)
 exception Not_supported
+
+(** This exception will be raised in particular case of conversion *)
 exception Not_found
 
 
-(** {1 Events} *)
+(** {2 Events} *)
 
-(** Patch of StorageEvent *)
+(** Patch of StorageEvent (because Key could be null !) *)
 class type storageEvent = 
 object 
   inherit Dom_html.event
   method key : Js.js_string Js.t Js.opt Js.readonly_prop
   method oldValue : Js.js_string Js.t Js.opt Js.readonly_prop
-  method keynewValue : Js.js_string Js.t Js.opt Js.readonly_prop
+  method newValue : Js.js_string Js.t Js.opt Js.readonly_prop
   method url : Js.js_string Js.t Js.readonly_prop
   method storageArea : Dom_html.storage Js.t Js.opt Js.readonly_prop
 end
@@ -50,14 +59,15 @@ end
 type event = storageEvent Js.t
 val event : event Dom.Event.typ
 
-(** {1 Storage} *)
+(** {2 Interfaces} *)
 
-(** Shortcut for [Dom_html.storage Js.t] *)
-type t = Dom_html.storage Js.t
+(** The basic interface of a storage handler. 
+    A Storage is basically a Key/Value store, using [string] for 
+    the keys and the values.  This implémentation is a low-level 
+    binding for the API. 
 
-(** {1 Interfaces} *)
-
-(** The basic interface of a storage handler *)
+    The library uses [Hashtbl.t] as an output format for filtering.
+*)
 module type STORAGE = 
 sig 
 
@@ -66,6 +76,7 @@ sig
   type old_value = string
   type url = string
 
+  (** This type represents a changeset on the storage *)
   type change_state = 
     | Clear
     | Insert of key * value 
@@ -73,14 +84,37 @@ sig
     | Update of key * old_value * value
 
 
+  (** [is_supported ()] returns [true] if the current storage is 
+      supported by the browser, false otherwise.
+   *)
   val is_supported: unit -> bool
+
+  (** Returns the JavaScript's representation of the storage object *)
   val handler: t
+
+  (** The length read-only property of the Storage interface returns an 
+      integer representing the number of data items stored in the Storage object.
+  *)
   val length: unit -> int
+
+  (** when passed a key name, will return that key's value.  (Wrapped into an option) *)
   val get: key -> value option
+
+  (**  when passed a key name and value, will add that key to the storage, 
+       or update that key's value if it already exists.)
+  *)
   val set: key -> value -> unit
+
+  (** when passed a key name, will remove that key from the storage. *)
   val remove: key -> unit 
+
+  (**  when invoked, clears all stored keys. *)
   val clear: unit -> unit
+
+  (** when passed a number n, returns the name of the nth key in the storage. 
+      The order of keys is [user-agent] defined, so you should not rely on it. *)
   val key: int -> key option
+
   val at: int -> (key * value) option
   val to_hashtbl: unit -> (key, value) Hashtbl.t
   val iter: (key -> value -> unit) -> unit
@@ -93,3 +127,6 @@ sig
     -> Dom.event_listener_id
 
 end
+
+module Local : STORAGE 
+module Session : STORAGE

@@ -36,7 +36,7 @@ object
   inherit Dom_html.event
   method key : Js.js_string Js.t Js.opt Js.readonly_prop
   method oldValue : Js.js_string Js.t Js.opt Js.readonly_prop
-  method keynewValue : Js.js_string Js.t Js.opt Js.readonly_prop
+  method newValue : Js.js_string Js.t Js.opt Js.readonly_prop
   method url : Js.js_string Js.t Js.readonly_prop
   method storageArea : Dom_html.storage Js.t Js.opt Js.readonly_prop
 end
@@ -176,7 +176,7 @@ struct
 
   let make_change k ev = 
     let key = Js.to_string k in 
-    let value = Js.Opt.to_option ev##.keynewValue in 
+    let value = Js.Opt.to_option ev##.newValue in 
     let old = Js.Opt.to_option ev##.oldValue in 
     match (old, value) with 
     | None, Some x -> Insert (key, Js.to_string x)
@@ -203,3 +203,6 @@ struct
       Js._true
 
 end
+
+module Local = Make (struct let handler = Dom_html.window##.localStorage end)
+module Session = Make (struct let handler = Dom_html.window##.localStorage end)
