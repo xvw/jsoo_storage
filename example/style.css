@@ -1,0 +1,23 @@
+body {
+  font-family: sans-serif;
+}
+
+input {
+  padding: 8px;
+  border: 1px solid gray;
+  border-radius: 4px;
+}
+
+button {
+  background-color: black; 
+  color: white; 
+  font-weight: 900;
+  padding: 8px;
+  border-style: none; 
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#clear {
+  background-color: red;
+}

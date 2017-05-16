@@ -147,6 +147,35 @@ sig
     -> (change_state -> url -> unit) 
     -> Dom.event_listener_id
 
+
+  (** [on_clear f] trigger [f] at each clear of the storage.  *)
+  val on_clear: (url -> unit) -> Dom.event_listener_id
+
+
+  (** [on_insert f] trigger [f] at each insertion in the storage. (You can use a [prefix]
+      to trigger the events only if it concerns a set of keys (with the gived prefix)) 
+  *)
+  val on_insert:
+    ?prefix:string  
+    -> (key -> value -> url -> unit)
+    -> Dom.event_listener_id
+
+  (** [on_remove f] trigger [f] at each remove in the storage. (You can use a [prefix]
+      to trigger the events only if it concerns a set of keys (with the gived prefix)) 
+  *)
+  val on_remove:
+    ?prefix:string  
+    -> (key -> old_value -> url -> unit)
+    -> Dom.event_listener_id
+
+  (** [on_update f] trigger [f] at each key update in the storage. (You can use a [prefix]
+      to trigger the events only if it concerns a set of keys (with the gived prefix)) 
+  *)
+  val on_update:
+    ?prefix:string  
+    -> (key -> old_value -> value -> url -> unit)
+    -> Dom.event_listener_id
+
 end
 
 

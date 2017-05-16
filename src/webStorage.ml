@@ -78,6 +78,24 @@ sig
     -> (change_state -> url -> unit) 
     -> Dom.event_listener_id
 
+  val on_clear: (url -> unit) -> Dom.event_listener_id
+
+  val on_insert:
+    ?prefix:string  
+    -> (key -> value -> url -> unit)
+    -> Dom.event_listener_id
+
+  val on_remove:
+    ?prefix:string  
+    -> (key -> old_value -> url -> unit)
+    -> Dom.event_listener_id
+
+  val on_update:
+    ?prefix:string  
+    -> (key -> old_value -> value -> url -> unit)
+    -> Dom.event_listener_id
+
+
 end
 
 module Make (R : sig val handler : t Js.optdef end) : STORAGE = 
@@ -207,6 +225,35 @@ struct
       event 
       (Dom.handler callback)
       Js._true
+
+  let on_clear f =
+    on_change (fun ev url ->
+      match ev with 
+      | Clear -> f url 
+      | _ -> ()
+    )
+  
+  let on_insert ?(prefix="") f =
+    on_change ~prefix (fun ev url ->
+      match ev with 
+      | Insert (key, value) -> f key value url 
+      | _ -> ()
+    )
+
+  let on_remove ?(prefix="") f =
+    on_change ~prefix (fun ev url ->
+      match ev with 
+      | Remove (key, old_value) -> f key old_value url 
+      | _ -> ()
+    )
+
+  let on_update ?(prefix="") f =
+    on_change ~prefix (fun ev url ->
+      match ev with 
+      | Update (key, old_value, new_value) -> 
+        f key old_value new_value url 
+      | _ -> ()
+    )
 
 end
 
