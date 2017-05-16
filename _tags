@@ -1,0 +1,24 @@
+# OASIS_START
+# DO NOT EDIT (digest: 0920d9e611b170d2f6f2f6ebec43157e)
+# Ignore VCS directories, you can use the same kind of rule outside
+# OASIS_START/STOP if you want to exclude directories that contains
+# useless stuff for the build process
+true: annot, bin_annot
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
+# Library jsoo_storage
+"src/jsoo_storage.cmxs": use_jsoo_storage
+"src/jsoo_storage.cma": oasis_library_jsoo_storage_byte
+<src/*.ml{,i,y}>: oasis_library_jsoo_storage_byte
+<src/*.ml{,i,y}>: pkg_js_of_ocaml
+<src/*.ml{,i,y}>: pkg_js_of_ocaml.ppx
+<src/*.ml{,i,y}>: pkg_lwt
+# OASIS_STOP

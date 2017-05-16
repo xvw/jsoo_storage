@@ -1,0 +1,10 @@
+# OASIS_START
+# DO NOT EDIT (digest: 20932bc5a5b88d354ef178d45dd9f76b)
+version = "1.0"
+description = "A Js_of_OCaml wrapper of the WebStorage API"
+requires = "js_of_ocaml js_of_ocaml.ppx lwt"
+archive(byte) = "jsoo_storage.cma"
+archive(byte, plugin) = "jsoo_storage.cma"
+exists_if = "jsoo_storage.cma"
+# OASIS_STOP
+

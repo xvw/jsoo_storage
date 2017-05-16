@@ -1,0 +1,32 @@
+opam-version: "1.2"
+name: "jsoo_storage"
+version: "1.0"
+maintainer: "Xavier Van de Woestyne <xaviervdw@gmail.com>"
+authors: [ "Xavier Van de Woestyne <xaviervdw@gmail.com>" ]
+license: "MIT"
+homepage: "http://github.com/xvw/jsoo_storage"
+dev-repo: "https://github.com/xvw/jsoo_storage.git"
+bug-reports: "https://github.com/xvw/jsoo_storage/issues"
+build: [
+  ["oasis" "setup"]
+  ["ocaml" "setup.ml" "-configure" "--prefix" prefix]
+  ["ocaml" "setup.ml" "-build"]
+]
+install: ["ocaml" "setup.ml" "-install"]
+remove: [
+  ["ocamlfind" "remove" "jsoo_storage"]
+]
+build-test: [
+  ["oasis" "setup"]
+  ["ocaml" "setup.ml" "-configure" "--enable-tests"]
+  ["ocaml" "setup.ml" "-build"]
+  ["ocaml" "setup.ml" "-test"]
+]
+build-doc: [ "ocaml" "setup.ml" "-doc" ]
+depends: [
+  "js_of_ocaml" {>= "2.8.4"}
+  "lwt"
+  "oasis" {build & >= "0.4.7"}
+  "ocamlbuild" {build}
+  "ocamlfind" {build}
+]
