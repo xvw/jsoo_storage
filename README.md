@@ -9,3 +9,11 @@
 
 -  `localStorage` does the same thing, but persists even when the browser is 
    closed and reopened.
+
+(source : [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API))
+
+## References
+
+- [Use the webStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API)
+- [Documentation/mli](https://github.com/xvw/jsoo_storage/blob/master/src/webStorage.mli)
+- [Example](https://github.com/xvw/jsoo_storage/tree/master/example/WebStorage)
