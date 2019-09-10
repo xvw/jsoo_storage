@@ -29,6 +29,7 @@ let option_map f = function
 exception Not_supported
 exception Not_found
 
+open Js_of_ocaml
 type t = Dom_html.storage Js.t
 
 class type storageEvent = 

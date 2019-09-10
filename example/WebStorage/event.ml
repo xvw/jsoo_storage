@@ -1,4 +1,5 @@
 open WebStorage
+open Js_of_ocaml
 
 let doc = Dom_html.document
 let io x = Firebug.console##log(x)

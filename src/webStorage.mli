@@ -30,6 +30,8 @@
 *)
 
 
+open Js_of_ocaml
+
 (** Shortcut for [Dom_html.storage Js.t] *)
 type t = Dom_html.storage Js.t
 
