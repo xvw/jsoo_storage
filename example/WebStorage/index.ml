@@ -1,3 +1,6 @@
+open Js_of_ocaml
+open Js_of_ocaml_lwt
+
 let doc = Dom_html.document
 let io x = Firebug.console##log(x)
 let puts x = io (Js.string x)
